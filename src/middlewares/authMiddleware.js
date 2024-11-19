@@ -9,6 +9,7 @@ dotenv.config();
 export const isAuthenticated = expressjwt({
     secret: process.env.JWT_SECRET,
     algorithms: ['HS256'],
+    userProperty: 'auth',
 })
 
 export const hasPermission = (action) => {

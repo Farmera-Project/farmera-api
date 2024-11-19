@@ -12,11 +12,7 @@ const userSchema = new Schema({
         enum: ['farmer', 'wholesaler', 'retailer'],
         default: 'farmer'
     },
-    location: {
-        type: { type: String, enum: ['Point'], required: true },
-        coordinates: { type: [Number], required: true }
-    },
-    deliveryAddress: { type: String },
+    address: { type: String },
 }, {
     timestamps: true,
 });

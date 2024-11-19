@@ -4,24 +4,38 @@ import { ProductModel } from "../models/productModel.js";
 export const addProduct = async (req, res, next) => {
     try {
         const { name, description, price, stock } = req.body;
-        const imageUrl = req.file ? req.file.path : null;
 
-        if (!req.auth || !req.auth.id) { // Check req.auth instead of req.user
-            return res.status(401).json({ error: 'User not authenticated' });
+        // Debugging file upload
+        console.log("Uploaded file details:", req.file);
+
+        // Get image URL or debug upload failure
+        const imageUrl = req.file?.url;
+        if (!imageUrl) {
+            return res.status(500).json({ error: "Image upload failed." });
         }
 
+        if (!req.auth || !req.auth.id) {
+            return res.status(401).json({ error: "User not authenticated." });
+        }
+
+        // Create and save the new product
         const newProduct = new ProductModel({
             name,
             description,
             price,
             stock,
-            image: imageUrl,
-            seller: req.auth.id // Use req.auth.id for seller ID
+            image: imageUrl, // Use SaveFilesOrg URL
+            seller: req.auth.id,
         });
 
         await newProduct.save();
-        res.status(201).json({ message: 'Product added successfully', product: newProduct, imageUrl });
+
+        res.status(201).json({
+            message: "Product added successfully",
+            product: newProduct,
+        });
     } catch (error) {
+        console.error("Error in addProduct:", error); // Debugging
         next(error);
     }
 };

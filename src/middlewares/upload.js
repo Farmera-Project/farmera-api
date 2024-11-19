@@ -1,28 +1,23 @@
-import { log } from "console";
 import multer from "multer";
 import { multerSaveFilesOrg } from "multer-savefilesorg";
 
-// Configure Multer for file upload
+// Configure Multer to upload to SaveFilesOrg
 export const productImageUpload = multer({
     storage: multerSaveFilesOrg({
-        apiAccessToken: process.env.SAVEFILESORG_API_KEY,
-        relativePath: '/poultry-feed/products/'
+        apiAccessToken: process.env.SAVEFILESORG_API_KEY, // Access token for SaveFilesOrg
+        relativePath: '/poultry-feed/*'  // Path to store the images within the service
     }),
     fileFilter: (req, file, cb) => {
+        // Ensure that only images are accepted
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
         } else {
             cb(new Error('Only image files are allowed.'), false);
         }
-
-        console.log(req.file);
-        
-
     },
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
-    },
-    preservePath: true
-})
+        fileSize: 5 * 1024 * 1024 // 5MB limit for the image size
+    }
+});
 
-export default productImageUpload
+export default productImageUpload;

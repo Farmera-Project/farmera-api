@@ -12,9 +12,12 @@ export const permissions = [
             'view_order_status',
             'cancel_order',
             'view_order_history',
+            'add_to_cart',
+            'get_cart',
+            'remove_from_cart',
             'make_payment',
             'view_payment_history',
-            'recieve_notifications',
+            'recieve_notifications'
         ],
 
         role: 'wholesaler',
@@ -28,6 +31,8 @@ export const permissions = [
             'view_stock_levels',
             'view_incoming_orders',
             'manage_orders',
+            'update_order_status',
+            'get_order_by_farmer',
             'view_order_history',
             'receive_order_notifications',
             'send_order_update_notifications',

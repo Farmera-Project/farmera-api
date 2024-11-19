@@ -109,7 +109,8 @@ export const getETA = async (req, res, next) => {
 
 
 // Helper function to geocode an address (use Nominatim Geocoding API)
-const geocodeAddress = async (address) => {
+
+export const geocodeAddress = async (address) => {
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
 
     try {
@@ -117,8 +118,9 @@ const geocodeAddress = async (address) => {
         const data = response.data;
 
         if (data && data.length > 0) {
-            const coordinates = `${data[0].lon},${data[0].lat}`; // Longitude and latitude
-            return coordinates;
+            const longitude = parseFloat(data[0].lon);
+            const latitude = parseFloat(data[0].lat);
+            return [longitude, latitude]; // Return as [lon, lat]
         } else {
             throw new Error('Unable to geocode address');
         }
@@ -127,4 +129,5 @@ const geocodeAddress = async (address) => {
         throw error;
     }
 };
+
 

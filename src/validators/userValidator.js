@@ -16,10 +16,7 @@ export const registerUserValidator = Joi.object().keys({
         otherwise: Joi.optional()
     }),
     role: Joi.string().valid('farmer', 'wholesaler', 'retailer').default('farmer'),
-    location: Joi.object({
-        type: Joi.string().valid('Point').required(),
-        coordinates: Joi.array().length(2).required()
-    })
+    address: Joi.string().required()
 });
 
 export const loginUserValidator = Joi.object({
