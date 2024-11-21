@@ -60,12 +60,12 @@ export const loginUser = async (req, res, next) => {
             process.env.JWT_SECRET,
             { expiresIn: '1d' }
         )
+        const response = {
+            user,token
+        }
 
         // Respond to request
-        res.json({ 
-            message: 'User logged in successfully',
-            accessToken: token
-        })
+        res.status(200).json(response)
     } catch (error) {
         next(error);
     }
@@ -85,38 +85,15 @@ export const getUserProfile = async (req, res, next) => {
 // Update user profile
 export const updateProfile = async (req, res, next) => {
     try {
-        // Validate request
-        const { error, value } = updateUserValidator.validate(req.body);
-        if (error) {
-            return res.status(422).json({ message: error.details[0].message });
-        }
-
-        // Check if user exists
-        const user = await UserModel.findById(req.auth.id);
-        if (!user) {
-            return res.status(404).json('User not found');
-        }
-
-        // Prepare the update data
-        const updatedData = {
-            fullName: value.fullName || user.fullName,
-            phoneNumber: value.phoneNumber || user.phoneNumber,
-            businessName: value.businessName || user.businessName,
-            location: value.location || user.location,
-        }
-
-        // Handle file upload
-        if (req.file) {
-            updatedData.avatar = req.file.path;
-        }
-
-        // Update user profile
-        const updatedUser = await UserModel.findByIdAndUpdate(req.auth.id, updatedData, { new: true });
-
-        res.status(200).json({
-            message: 'User profile updated successfully',
-            updatedProfile: updatedUser
+        const { error, value } = updateUserValidator.validate({
+            ...req.body,
+            image: req.file?.filename
         })
+        if (error) {
+            return res.status(422).json(error);
+        }
+        await UserModel.findByIdAndUpdate(req.auth.id, value);
+        res.json({ message: 'User profile updated successfully' });
     } catch (error) {
         next(error);
     }

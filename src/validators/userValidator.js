@@ -24,7 +24,7 @@ export const loginUserValidator = Joi.object({
     password: Joi.string().required()
 });
 
-export const updateUserValidator = Joi.object().keys({
+export const updateUserValidator = Joi.object({
     fullName: Joi.string(),
     phoneNumber: Joi.string().pattern(/^\+?[0-9]\d{0,14}$/),
     image: Joi.string()
